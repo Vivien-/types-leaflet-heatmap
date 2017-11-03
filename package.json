@@ -1,0 +1,24 @@
+{
+  "name": "types.leaflet.heatmap",
+  "version": "1.0.1",
+  "description": "Typescript definitions for leaflet.heatmap",
+  "main": "src/index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vivien-/types.leaflet.heatmap.git"
+  },
+  "keywords": [
+    "leaflet",
+    "heat"
+  ],
+  "author": "Atos",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vivien-/types.leaflet.heatmap/issues"
+  },
+  "homepage": "https://github.com/Vivien-/types.leaflet.heatmap#readme"
+}
