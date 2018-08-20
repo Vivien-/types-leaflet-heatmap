@@ -59,7 +59,7 @@ var HeatmapOverlay = L.Layer.extend({
     map.on('moveend', this._reset, this);
     this._draw();
   },
-
+  
   addTo: function (map) {
     map.addLayer(this);
     return this;
@@ -88,7 +88,7 @@ var HeatmapOverlay = L.Layer.extend({
     var bounds, zoom, scale;
     var generatedData = { max: this._max, min: this._min, data: [] };
 
-    bounds = this._map.getBounds();
+    // bounds = this._map.getBounds();
     zoom = this._map.getZoom();
     scale = Math.pow(2, zoom);
 
@@ -99,13 +99,20 @@ var HeatmapOverlay = L.Layer.extend({
       return;
     }
 
-
     var latLngPoints = [];
     var radiusMultiplier = this.cfg.scaleRadius ? scale : 1;
     var localMax = 0;
     var localMin = 0;
     var valueField = this.cfg.valueField;
     var len = this._data.length;
+    var radius = (this.cfg.radius || 2) * radiusMultiplier;
+
+    if (radius < 0.5) {
+      if (this._heatmap) {
+        this._heatmap.setData(generatedData);
+      }
+      return;
+    }
 
     while (len--) {
       var entry = this._data[len];
@@ -125,8 +132,6 @@ var HeatmapOverlay = L.Layer.extend({
       var latlngPoint = { x: Math.round(point.x), y: Math.round(point.y) };
       latlngPoint[valueField] = value;
 
-      var radius;
-
       if (entry.radius) {
         radius = entry.radius * radiusMultiplier;
       } else {
@@ -142,7 +147,11 @@ var HeatmapOverlay = L.Layer.extend({
 
     generatedData.data = latLngPoints;
 
-    this._heatmap.setData(generatedData);
+    try {
+      this._heatmap.setData(generatedData);
+    } catch (e) {
+      console.error('heatmap.setData() with zoom ' + zoom, e);
+    }
   },
   setData: function (data) {
     this._max = data.max || this._max;
@@ -213,13 +222,13 @@ var HeatmapOverlay = L.Layer.extend({
   },
   _animateZoom: function (e) {
     var scale = this._map.getZoomScale(e.zoom),
-        offset = this._map._getCenterOffset(e.center)._multiplyBy(-scale).subtract(this._map._getMapPanePos());
+      offset = this._map._getCenterOffset(e.center)._multiplyBy(-scale).subtract(this._map._getMapPanePos());
 
     if (L.DomUtil.setTransform) {
-        L.DomUtil.setTransform(this._el, offset, scale);
+      L.DomUtil.setTransform(this._el, offset, scale);
 
     } else {
-        this._el.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')';
+      this._el.style[L.DomUtil.TRANSFORM] = L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ')';
     }
   }
 });
