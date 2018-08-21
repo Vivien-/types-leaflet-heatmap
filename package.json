@@ -1,6 +1,6 @@
 {
   "name": "types.leaflet.heatmap",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Typescript definitions for leaflet.heatmap",
   "main": "src/index.js",
   "types": "index.d.ts",
